@@ -27,9 +27,6 @@ import { TaskWhereUniqueInput } from "./TaskWhereUniqueInput";
 import { TaskFindManyArgs } from "./TaskFindManyArgs";
 import { TaskUpdateInput } from "./TaskUpdateInput";
 import { Task } from "./Task";
-import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
-import { User } from "../../user/base/User";
-import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -51,12 +48,25 @@ export class TaskControllerBase {
   })
   async create(@common.Body() data: TaskCreateInput): Promise<Task> {
     return await this.service.create({
-      data: data,
+      data: {
+        ...data,
+
+        uid: {
+          connect: data.uid,
+        },
+      },
       select: {
         completed: true,
         createdAt: true,
         id: true,
         text: true,
+
+        uid: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -83,6 +93,13 @@ export class TaskControllerBase {
         createdAt: true,
         id: true,
         text: true,
+
+        uid: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -110,6 +127,13 @@ export class TaskControllerBase {
         createdAt: true,
         id: true,
         text: true,
+
+        uid: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -140,12 +164,25 @@ export class TaskControllerBase {
     try {
       return await this.service.update({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          uid: {
+            connect: data.uid,
+          },
+        },
         select: {
           completed: true,
           createdAt: true,
           id: true,
           text: true,
+
+          uid: {
+            select: {
+              id: true,
+            },
+          },
+
           updatedAt: true,
         },
       });
@@ -181,6 +218,13 @@ export class TaskControllerBase {
           createdAt: true,
           id: true,
           text: true,
+
+          uid: {
+            select: {
+              id: true,
+            },
+          },
+
           updatedAt: true,
         },
       });
@@ -192,111 +236,5 @@ export class TaskControllerBase {
       }
       throw error;
     }
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get("/:id/uid")
-  @ApiNestedQuery(UserFindManyArgs)
-  @nestAccessControl.UseRoles({
-    resource: "User",
-    action: "read",
-    possession: "any",
-  })
-  async findManyUid(
-    @common.Req() request: Request,
-    @common.Param() params: TaskWhereUniqueInput
-  ): Promise<User[]> {
-    const query = plainToClass(UserFindManyArgs, request.query);
-    const results = await this.service.findUid(params.id, {
-      ...query,
-      select: {
-        createdAt: true,
-        firstName: true,
-        id: true,
-        lastName: true,
-        roles: true,
-
-        task: {
-          select: {
-            id: true,
-          },
-        },
-
-        updatedAt: true,
-        username: true,
-      },
-    });
-    if (results === null) {
-      throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
-      );
-    }
-    return results;
-  }
-
-  @common.Post("/:id/uid")
-  @nestAccessControl.UseRoles({
-    resource: "Task",
-    action: "update",
-    possession: "any",
-  })
-  async connectUid(
-    @common.Param() params: TaskWhereUniqueInput,
-    @common.Body() body: UserWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      uid: {
-        connect: body,
-      },
-    };
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.Patch("/:id/uid")
-  @nestAccessControl.UseRoles({
-    resource: "Task",
-    action: "update",
-    possession: "any",
-  })
-  async updateUid(
-    @common.Param() params: TaskWhereUniqueInput,
-    @common.Body() body: UserWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      uid: {
-        set: body,
-      },
-    };
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.Delete("/:id/uid")
-  @nestAccessControl.UseRoles({
-    resource: "Task",
-    action: "update",
-    possession: "any",
-  })
-  async disconnectUid(
-    @common.Param() params: TaskWhereUniqueInput,
-    @common.Body() body: UserWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      uid: {
-        disconnect: body,
-      },
-    };
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
   }
 }

@@ -47,14 +47,11 @@ export class TaskServiceBase {
     return this.prisma.task.delete(args);
   }
 
-  async findUid(
-    parentId: string,
-    args: Prisma.UserFindManyArgs
-  ): Promise<User[]> {
+  async getUid(parentId: string): Promise<User | null> {
     return this.prisma.task
-      .findUniqueOrThrow({
+      .findUnique({
         where: { id: parentId },
       })
-      .uid(args);
+      .uid();
   }
 }

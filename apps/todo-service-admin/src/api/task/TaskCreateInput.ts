@@ -1,7 +1,7 @@
-import { UserCreateNestedManyWithoutTasksInput } from "./UserCreateNestedManyWithoutTasksInput";
+import { UserWhereUniqueInput } from "../user/UserWhereUniqueInput";
 
 export type TaskCreateInput = {
   completed: boolean;
   text: string;
-  uid?: UserCreateNestedManyWithoutTasksInput;
+  uid: UserWhereUniqueInput | null;
 };

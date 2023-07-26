@@ -17,7 +17,7 @@ import {
   IsString,
   ValidateNested,
 } from "class-validator";
-import { UserUpdateManyWithoutTasksInput } from "./UserUpdateManyWithoutTasksInput";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 import { Type } from "class-transformer";
 
 @InputType()
@@ -46,15 +46,15 @@ class TaskUpdateInput {
 
   @ApiProperty({
     required: false,
-    type: () => UserUpdateManyWithoutTasksInput,
+    type: () => UserWhereUniqueInput,
   })
   @ValidateNested()
-  @Type(() => UserUpdateManyWithoutTasksInput)
+  @Type(() => UserWhereUniqueInput)
   @IsOptional()
-  @Field(() => UserUpdateManyWithoutTasksInput, {
+  @Field(() => UserWhereUniqueInput, {
     nullable: true,
   })
-  uid?: UserUpdateManyWithoutTasksInput;
+  uid?: UserWhereUniqueInput | null;
 }
 
 export { TaskUpdateInput as TaskUpdateInput };

@@ -26,7 +26,6 @@ import { TaskCountArgs } from "./TaskCountArgs";
 import { TaskFindManyArgs } from "./TaskFindManyArgs";
 import { TaskFindUniqueArgs } from "./TaskFindUniqueArgs";
 import { Task } from "./Task";
-import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
 import { User } from "../../user/base/User";
 import { TaskService } from "../task.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
@@ -88,7 +87,13 @@ export class TaskResolverBase {
   async createTask(@graphql.Args() args: CreateTaskArgs): Promise<Task> {
     return await this.service.create({
       ...args,
-      data: args.data,
+      data: {
+        ...args.data,
+
+        uid: {
+          connect: args.data.uid,
+        },
+      },
     });
   }
 
@@ -103,7 +108,13 @@ export class TaskResolverBase {
     try {
       return await this.service.update({
         ...args,
-        data: args.data,
+        data: {
+          ...args.data,
+
+          uid: {
+            connect: args.data.uid,
+          },
+        },
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -135,22 +146,21 @@ export class TaskResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => [User], { name: "uid" })
+  @graphql.ResolveField(() => User, {
+    nullable: true,
+    name: "uid",
+  })
   @nestAccessControl.UseRoles({
     resource: "User",
     action: "read",
     possession: "any",
   })
-  async resolveFieldUid(
-    @graphql.Parent() parent: Task,
-    @graphql.Args() args: UserFindManyArgs
-  ): Promise<User[]> {
-    const results = await this.service.findUid(parent.id, args);
+  async resolveFieldUid(@graphql.Parent() parent: Task): Promise<User | null> {
+    const result = await this.service.getUid(parent.id);
 
-    if (!results) {
-      return [];
+    if (!result) {
+      return null;
     }
-
-    return results;
+    return result;
   }
 }

@@ -5,5 +5,6 @@ export type TaskOrderByInput = {
   createdAt?: SortOrder;
   id?: SortOrder;
   text?: SortOrder;
+  uidId?: SortOrder;
   updatedAt?: SortOrder;
 };

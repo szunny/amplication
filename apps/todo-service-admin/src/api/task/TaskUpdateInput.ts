@@ -1,7 +1,7 @@
-import { UserUpdateManyWithoutTasksInput } from "./UserUpdateManyWithoutTasksInput";
+import { UserWhereUniqueInput } from "../user/UserWhereUniqueInput";
 
 export type TaskUpdateInput = {
   completed?: boolean;
   text?: string;
-  uid?: UserUpdateManyWithoutTasksInput;
+  uid?: UserWhereUniqueInput | null;
 };
