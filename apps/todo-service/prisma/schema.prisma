@@ -14,8 +14,7 @@ model User {
   lastName  String?
   password  String
   roles     Json
-  task      Task?    @relation(fields: [taskId], references: [id])
-  taskId    String?
+  task      Task?
   updatedAt DateTime @updatedAt
   username  String   @unique
 }
@@ -25,6 +24,7 @@ model Task {
   createdAt DateTime @default(now())
   id        String   @id @default(cuid())
   text      String
-  uid       User[]
+  uid       User?    @relation(fields: [userId], references: [id])
   updatedAt DateTime @updatedAt
+  userId    String?
 }

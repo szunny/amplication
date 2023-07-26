@@ -6,8 +6,8 @@ import {
   CreateProps,
   BooleanInput,
   TextInput,
-  ReferenceArrayInput,
-  SelectArrayInput,
+  ReferenceInput,
+  SelectInput,
 } from "react-admin";
 
 import { UserTitle } from "../user/UserTitle";
@@ -18,14 +18,9 @@ export const TaskCreate = (props: CreateProps): React.ReactElement => {
       <SimpleForm>
         <BooleanInput label="Completed" source="completed" />
         <TextInput label="Text" source="text" />
-        <ReferenceArrayInput
-          source="uid"
-          reference="User"
-          parse={(value: any) => value && value.map((v: any) => ({ id: v }))}
-          format={(value: any) => value && value.map((v: any) => v.id)}
-        >
-          <SelectArrayInput optionText={UserTitle} />
-        </ReferenceArrayInput>
+        <ReferenceInput source="uid.id" reference="User" label="UID">
+          <SelectInput optionText={UserTitle} />
+        </ReferenceInput>
       </SimpleForm>
     </Create>
   );
