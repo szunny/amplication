@@ -15,7 +15,7 @@ import { IsString, IsOptional, ValidateNested } from "class-validator";
 import { IsJSONValue } from "@app/custom-validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
-import { TaskWhereUniqueInput } from "../../task/base/TaskWhereUniqueInput";
+import { TaskCreateNestedManyWithoutUsersInput } from "./TaskCreateNestedManyWithoutUsersInput";
 import { Type } from "class-transformer";
 
 @InputType()
@@ -59,15 +59,15 @@ class UserCreateInput {
 
   @ApiProperty({
     required: false,
-    type: () => TaskWhereUniqueInput,
+    type: () => TaskCreateNestedManyWithoutUsersInput,
   })
   @ValidateNested()
-  @Type(() => TaskWhereUniqueInput)
+  @Type(() => TaskCreateNestedManyWithoutUsersInput)
   @IsOptional()
-  @Field(() => TaskWhereUniqueInput, {
+  @Field(() => TaskCreateNestedManyWithoutUsersInput, {
     nullable: true,
   })
-  tasks?: TaskWhereUniqueInput | null;
+  tasks?: TaskCreateNestedManyWithoutUsersInput;
 
   @ApiProperty({
     required: true,

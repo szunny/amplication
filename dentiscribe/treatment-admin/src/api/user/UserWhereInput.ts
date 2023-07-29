@@ -1,11 +1,11 @@
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { StringFilter } from "../../util/StringFilter";
-import { TaskWhereUniqueInput } from "../task/TaskWhereUniqueInput";
+import { TaskListRelationFilter } from "../task/TaskListRelationFilter";
 
 export type UserWhereInput = {
   firstName?: StringNullableFilter;
   id?: StringFilter;
   lastName?: StringNullableFilter;
-  tasks?: TaskWhereUniqueInput;
+  tasks?: TaskListRelationFilter;
   username?: StringFilter;
 };

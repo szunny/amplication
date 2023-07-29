@@ -7,7 +7,7 @@ export type User = {
   id: string;
   lastName: string | null;
   roles: JsonValue;
-  tasks?: Task | null;
+  tasks?: Array<Task>;
   updatedAt: Date;
   username: string;
 };
