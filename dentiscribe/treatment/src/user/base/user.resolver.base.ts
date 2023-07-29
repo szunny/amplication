@@ -26,6 +26,7 @@ import { UserCountArgs } from "./UserCountArgs";
 import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserFindUniqueArgs } from "./UserFindUniqueArgs";
 import { User } from "./User";
+import { TaskFindManyArgs } from "../../task/base/TaskFindManyArgs";
 import { Task } from "../../task/base/Task";
 import { UserService } from "../user.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
@@ -87,15 +88,7 @@ export class UserResolverBase {
   async createUser(@graphql.Args() args: CreateUserArgs): Promise<User> {
     return await this.service.create({
       ...args,
-      data: {
-        ...args.data,
-
-        tasks: args.data.tasks
-          ? {
-              connect: args.data.tasks,
-            }
-          : undefined,
-      },
+      data: args.data,
     });
   }
 
@@ -110,15 +103,7 @@ export class UserResolverBase {
     try {
       return await this.service.update({
         ...args,
-        data: {
-          ...args.data,
-
-          tasks: args.data.tasks
-            ? {
-                connect: args.data.tasks,
-              }
-            : undefined,
-        },
+        data: args.data,
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -150,23 +135,22 @@ export class UserResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => Task, {
-    nullable: true,
-    name: "tasks",
-  })
+  @graphql.ResolveField(() => [Task], { name: "tasks" })
   @nestAccessControl.UseRoles({
     resource: "Task",
     action: "read",
     possession: "any",
   })
   async resolveFieldTasks(
-    @graphql.Parent() parent: User
-  ): Promise<Task | null> {
-    const result = await this.service.getTasks(parent.id);
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: TaskFindManyArgs
+  ): Promise<Task[]> {
+    const results = await this.service.findTasks(parent.id, args);
 
-    if (!result) {
-      return null;
+    if (!results) {
+      return [];
     }
-    return result;
+
+    return results;
   }
 }

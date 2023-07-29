@@ -90,11 +90,9 @@ export class TaskResolverBase {
       data: {
         ...args.data,
 
-        uid: args.data.uid
-          ? {
-              connect: args.data.uid,
-            }
-          : undefined,
+        uid: {
+          connect: args.data.uid,
+        },
       },
     });
   }
@@ -113,11 +111,9 @@ export class TaskResolverBase {
         data: {
           ...args.data,
 
-          uid: args.data.uid
-            ? {
-                connect: args.data.uid,
-              }
-            : undefined,
+          uid: {
+            connect: args.data.uid,
+          },
         },
       });
     } catch (error) {

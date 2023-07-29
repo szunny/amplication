@@ -51,11 +51,9 @@ export class TaskControllerBase {
       data: {
         ...data,
 
-        uid: data.uid
-          ? {
-              connect: data.uid,
-            }
-          : undefined,
+        uid: {
+          connect: data.uid,
+        },
       },
       select: {
         completed: true,
@@ -169,11 +167,9 @@ export class TaskControllerBase {
         data: {
           ...data,
 
-          uid: data.uid
-            ? {
-                connect: data.uid,
-              }
-            : undefined,
+          uid: {
+            connect: data.uid,
+          },
         },
         select: {
           completed: true,

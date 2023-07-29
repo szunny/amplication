@@ -1,11 +1,11 @@
 import { InputJsonValue } from "../../types";
-import { TaskWhereUniqueInput } from "../task/TaskWhereUniqueInput";
+import { TaskCreateNestedManyWithoutUsersInput } from "./TaskCreateNestedManyWithoutUsersInput";
 
 export type UserCreateInput = {
   firstName?: string | null;
   lastName?: string | null;
   password: string;
   roles: InputJsonValue;
-  tasks?: TaskWhereUniqueInput | null;
+  tasks?: TaskCreateNestedManyWithoutUsersInput;
   username: string;
 };
